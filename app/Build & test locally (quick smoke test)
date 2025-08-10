@@ -1,0 +1,8 @@
+# build
+docker build -t ai-watchdog:local .
+
+# run
+docker run --rm -p 8080:8080 ai-watchdog:local
+
+# test endpoint
+curl -s -X POST "http://localhost:8080/analyze" -H "Content-Type: application/json" -d '{"logs": ["login fail from 1.2.3.4"]}' | jq
