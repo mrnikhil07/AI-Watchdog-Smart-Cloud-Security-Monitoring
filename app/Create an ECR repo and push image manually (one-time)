@@ -1,0 +1,14 @@
+AWS_REGION=ap-south-1
+AWS_ACCOUNT_ID=123456789012   # <- replace this
+REPO_NAME=ai-watchdog
+
+# create repo (only once)
+aws ecr create-repository --repository-name $REPO_NAME --region $AWS_REGION
+
+# login docker to ECR
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+# build, tag, push
+docker build -t $REPO_NAME:latest .
+docker tag $REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
+docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
